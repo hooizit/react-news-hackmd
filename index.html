@@ -9,6 +9,12 @@
 
   <!-- Не используйте это в production -->
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+
+  <style>
+    .red {
+      color: #FF0000;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,8 +24,21 @@
       const App = () => {
         return <p>Hi, i'm component</p>
       }
+
+      class BigApp extends React.Component {
+        render() {
+          return (
+            <div>
+              <h1>I'm component, BigApp</h1>
+              <p className='red'>Components can be nested.</p>
+              <App/>
+            </div>
+          )
+        }
+      }
+
       ReactDOM.render(
-        <App/>,
+        <BigApp/>,
         document.getElementById('root')
       );
     </script>
