@@ -5,6 +5,7 @@
     <title>React [RU] Tutorial</title>
     <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
 
     <!-- Не используйте это в production -->
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
@@ -60,7 +61,7 @@
         },
         {
           id: 3,
-          author: "Max Frontend",
+          // author: "Max Frontend", // deleting for check propTypes validation
           text: "Прошло 2 года с прошлых учебников, а $ так и не стоит 35"
         },
         {
@@ -94,6 +95,7 @@
 
       class News extends React.Component {
         renderNews = () => {
+          // access to "this" methodName = () => {...}
           const { data } = this.props;
           let newsTemplate = null;
 
@@ -122,6 +124,18 @@
           );
         }
       }
+      // PropTypes validation
+
+      News.propTypes = {
+        data: PropTypes.array.isRequired
+      };
+
+      Article.propTypes = {
+        data: PropTypes.shape({
+          author: PropTypes.string.isRequired,
+          text: PropTypes.string.isRequired
+        })
+      };
 
       ReactDOM.render(<App />, document.getElementById("root"));
     </script>
