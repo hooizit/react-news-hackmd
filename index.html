@@ -54,15 +54,28 @@
 
       class News extends React.Component {
         render() {
-          const newsTemplate = this.props.data.map(el => {
-            return (
-              <div key={el.id}>
-                <p className="news__author">{el.author}:</p>
-                <p className="news__text">{el.text}:</p>
-              </div>
-            );
-          });
-          return <div className="news">{newsTemplate}</div>;
+          const { data } = this.props;
+          let newsTemplate;
+          if (data.length) {
+            newsTemplate = data.map(el => {
+              return (
+                <div key={el.id}>
+                  <p className="news__author">{el.author}:</p>
+                  <p className="news__text">{el.text}:</p>
+                </div>
+              );
+            });
+          } else {
+            newsTemplate = <p>Unfortunately, no news.</p>;
+          }
+          return (
+            <div className="news">
+              {newsTemplate}
+              {data.length > 0 ? (
+                <strong>News count: {data.length}</strong>
+              ) : null}
+            </div>
+          );
         }
       }
 
