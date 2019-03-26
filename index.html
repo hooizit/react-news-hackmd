@@ -13,21 +13,40 @@
       .red {
         color: #ff0000;
       }
+
+      body {
+        background: rgba(0, 102, 255, 0.38);
+        font-family: sans-serif;
+      }
+
+      p {
+        margin: 0 0 5px;
+      }
+
+      .article {
+        background: #fff;
+        border: 1px solid rgba(0, 89, 181, 0.82);
+        width: 600px;
+        margin: 0 0 5px;
+        box-shadow: 2px 2px 5px -1px rgb(0, 81, 202);
+        padding: 3px 5px;
+      }
+
+      .news__author {
+        text-decoration: underline;
+        color: #007ddc;
+      }
+
+      .news__text {
+        margin: 10px 0 0 0;
+        display: block;
+      }
     </style>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      const App = () => {
-        return (
-          <React.Fragment>
-            <News data={myNews} /> {/* added data property */}
-            <Comments />
-          </React.Fragment>
-        );
-      };
-
       const myNews = [
         {
           id: 1, // добавили id
@@ -52,18 +71,34 @@
         }
       ];
 
+      const App = () => {
+        return (
+          <React.Fragment>
+            <h2>News</h2>
+            <News data={myNews} /> {/* added data property */}
+          </React.Fragment>
+        );
+      };
+
+      class Article extends React.Component {
+        render() {
+          const { author, text } = this.props.data;
+          return (
+            <div className="article">
+              <p className="news__author">{author}:</p>
+              <p className="news__text">{text}:</p>
+            </div>
+          );
+        }
+      }
+
       class News extends React.Component {
         render() {
           const { data } = this.props;
           let newsTemplate;
           if (data.length) {
             newsTemplate = data.map(el => {
-              return (
-                <div key={el.id}>
-                  <p className="news__author">{el.author}:</p>
-                  <p className="news__text">{el.text}:</p>
-                </div>
-              );
+              return <Article key={el.id} data={el} />;
             });
           } else {
             newsTemplate = <p>Unfortunately, no news.</p>;
@@ -78,10 +113,6 @@
           );
         }
       }
-
-      const Comments = () => {
-        return <p>No news - no comments.</p>;
-      };
 
       ReactDOM.render(<App />, document.getElementById("root"));
     </script>
