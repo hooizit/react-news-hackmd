@@ -87,6 +87,19 @@
           super(props);
           this.input = React.createRef();
         }
+        // Lifecycle methods
+        componentDidMount() {
+          this.input.current.focus();
+        }
+        /*
+          componentWillMount [DEPRECATED]
+          componentDidMount
+          componentWillReciveProps [DEPRECATED] Use getDerivedStateFromProps
+          shouldComponentUpdate
+          componentWillUpdate [DEPRECATED]
+          componentDidUpdate
+          componentWillUnmount
+        */
         onButtonInputHandler = e => {
           alert(this.input.current.value);
         };
