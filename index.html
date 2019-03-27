@@ -42,6 +42,10 @@
         margin: 10px 0 0 0;
         display: block;
       }
+
+      .test-input {
+        margin: 0 5px 5px 0;
+      }
     </style>
   </head>
 
@@ -78,10 +82,37 @@
         }
       ];
 
+      class TestInput extends React.Component {
+        state = {
+          inputValue: ""
+        };
+        onChangeHandler = e => {
+          this.setState({ inputValue: e.currentTarget.value });
+        };
+        onButtonInputHandler = e => {
+          e.preventDefault();
+          alert(this.state.inputValue);
+        };
+        render() {
+          return (
+            <React.Fragment>
+              <input
+                className="test-input"
+                onChange={this.onChangeHandler}
+                value={this.state.inputValue}
+                placeholder="Enter value"
+              />
+              <button onClick={this.onButtonInputHandler}>Send</button>
+            </React.Fragment>
+          );
+        }
+      }
+
       const App = () => {
         return (
           <React.Fragment>
             <h2>News</h2>
+            <TestInput />
             <News data={myNews} /> {/* added data property */}
           </React.Fragment>
         );
@@ -99,7 +130,6 @@
         render() {
           const { author, text, bigText } = this.props.data;
           const { visible } = this.state;
-          console.log("render", this);
           return (
             <div className="article">
               <p className="news__author">{author}:</p>
@@ -121,9 +151,6 @@
       }
 
       class News extends React.Component {
-        state = {
-          counter: 0
-        };
         renderNews = () => {
           // access to "this" methodName = () => {...}
           const { data } = this.props;
@@ -139,26 +166,18 @@
 
           return newsTemplate;
         };
-        handleNewsClick = e => {
-          e.preventDefault();
-          this.setState({ counter: ++this.state.counter });
-        };
+
         render() {
           const { data } = this.props;
-          const { counter } = this.state;
 
           return (
             <div className="news">
               {this.renderNews()}
               {data.length ? (
-                <strong
-                  className={"news__count"}
-                  onClick={this.handleNewsClick}
-                >
+                <strong className={"news__count"}>
                   Всего новостей: {data.length}
                 </strong>
               ) : null}
-              <p>Click count: {counter}</p>
             </div>
           );
         }
