@@ -83,24 +83,21 @@
       ];
 
       class TestInput extends React.Component {
-        state = {
-          inputValue: ""
-        };
-        onChangeHandler = e => {
-          this.setState({ inputValue: e.currentTarget.value });
-        };
+        constructor(props) {
+          super(props);
+          this.input = React.createRef();
+        }
         onButtonInputHandler = e => {
-          e.preventDefault();
-          alert(this.state.inputValue);
+          alert(this.input.current.value);
         };
         render() {
           return (
             <React.Fragment>
               <input
                 className="test-input"
-                onChange={this.onChangeHandler}
-                value={this.state.inputValue}
+                defaultValue=""
                 placeholder="Enter value"
+                ref={this.input}
               />
               <button onClick={this.onButtonInputHandler}>Send</button>
             </React.Fragment>
