@@ -50,25 +50,31 @@
     <script type="text/babel">
       const myNews = [
         {
-          id: 1, // добавили id
+          id: 1,
           author: "Саша Печкин",
-          text: "В четверг, четвертого числа..."
+          text: "В четверг, четвертого числа...",
+          bigText:
+            "в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж."
         },
         {
           id: 2,
           author: "Просто Вася",
-          text: "Считаю, что $ должен стоить 35 рублей!"
+          text: "Считаю, что $ должен стоить 35 рублей!",
+          bigText: "А евро 42!"
         },
         {
           id: 3,
-          // author: "Max Frontend", // deleting for check propTypes validation
-          text: "Прошло 2 года с прошлых учебников, а $ так и не стоит 35"
+          author: "Max Frontend",
+          text: "Прошло 2 года с прошлых учебников, а $ так и не стоит 35",
+          bigText: "А евро опять выше 70."
         },
         {
           id: 4,
           author: "Гость",
           text:
-            "Бесплатно. Без смс, про реакт, заходи - https://maxpfrontend.ru"
+            "Бесплатно. Без смс, про реакт, заходи - https://maxpfrontend.ru",
+          bigText:
+            "Еще есть группа VK, telegram и канал на youtube! Вся инфа на сайте, не реклама!"
         }
       ];
 
@@ -82,18 +88,42 @@
       };
 
       class Article extends React.Component {
+        state = {
+          visible: false // initial state
+        };
+
+        handleReadMoreClick = e => {
+          e.preventDefault();
+          this.setState({ visible: true });
+        };
         render() {
-          const { author, text } = this.props.data;
+          const { author, text, bigText } = this.props.data;
+          const { visible } = this.state;
+          console.log("render", this);
           return (
             <div className="article">
               <p className="news__author">{author}:</p>
               <p className="news__text">{text}:</p>
+              {/* if not visible, show link */
+              !visible && (
+                <a
+                  onClick={this.handleReadMoreClick}
+                  href="#"
+                  className="news__readmore"
+                >
+                  Read more
+                </a>
+              )}
+              {visible && <p className="news__bigText">{bigText}:</p>}
             </div>
           );
         }
       }
 
       class News extends React.Component {
+        state = {
+          counter: 0
+        };
         renderNews = () => {
           // access to "this" methodName = () => {...}
           const { data } = this.props;
@@ -109,21 +139,31 @@
 
           return newsTemplate;
         };
+        handleNewsClick = e => {
+          e.preventDefault();
+          this.setState({ counter: ++this.state.counter });
+        };
         render() {
           const { data } = this.props;
+          const { counter } = this.state;
 
           return (
             <div className="news">
               {this.renderNews()}
               {data.length ? (
-                <strong className={"news__count"}>
+                <strong
+                  className={"news__count"}
+                  onClick={this.handleNewsClick}
+                >
                   Всего новостей: {data.length}
                 </strong>
               ) : null}
+              <p>Click count: {counter}</p>
             </div>
           );
         }
       }
+
       // PropTypes validation
 
       News.propTypes = {
@@ -133,7 +173,8 @@
       Article.propTypes = {
         data: PropTypes.shape({
           author: PropTypes.string.isRequired,
-          text: PropTypes.string.isRequired
+          text: PropTypes.string.isRequired,
+          bigText: PropTypes.string.isRequired
         })
       };
 
