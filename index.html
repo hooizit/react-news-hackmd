@@ -79,97 +79,31 @@
         {
           id: 1,
           author: "Саша Печкин",
-          text: "В четверг, четвертого числа...",
-          bigText:
+          title: "В четверг, четвертого числа...",
+          content:
             "в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж."
         },
         {
           id: 2,
           author: "Просто Вася",
-          text: "Считаю, что $ должен стоить 35 рублей!",
-          bigText: "А евро 42!"
+          title: "Считаю, что $ должен стоить 35 рублей!",
+          content: "А евро 42!"
         },
         {
           id: 3,
           author: "Max Frontend",
-          text: "Прошло 2 года с прошлых учебников, а $ так и не стоит 35",
-          bigText: "А евро опять выше 70."
+          title: "Прошло 2 года с прошлых учебников, а $ так и не стоит 35",
+          content: "А евро опять выше 70."
         },
         {
           id: 4,
           author: "Гость",
-          text:
+          title:
             "Бесплатно. Без смс, про реакт, заходи - https://maxpfrontend.ru",
-          bigText:
+          content:
             "Еще есть группа VK, telegram и канал на youtube! Вся инфа на сайте, не реклама!"
         }
       ];
-
-      class Add extends React.Component {
-        state = {
-          author: "",
-          content: "",
-          agree: false
-        };
-
-        onBtnClickHandler = e => {
-          e.preventDefault();
-          alert(this.state.author + "\n" + this.state.content);
-        };
-
-        handleChangeInputs = e => {
-          const { id, value } = e.currentTarget;
-          this.setState({ [id]: e.currentTarget.value });
-        };
-
-        handleCheckboxChange = e => {
-          this.setState({ agree: e.currentTarget.checked });
-        };
-        render() {
-          const { author, content, agree } = this.state;
-
-          return (
-            <form className="add">
-              <input
-                id="author"
-                type="text"
-                onChange={this.handleChangeInputs}
-                className="add__author"
-                placeholder="Your Name"
-                value={author}
-              />
-              <textarea
-                id="content"
-                onChange={this.handleChangeInputs}
-                className="add__text"
-                placeholder="Enter Content"
-                value={content}
-              />
-              <label className="add__checkrule">
-                <input type="checkbox" onChange={this.handleCheckboxChange} />I
-                Agree With Rulezzz
-              </label>
-              <button
-                className="add__btn"
-                onClick={this.onBtnClickHandler}
-                disabled={!agree || !author.trim() || !content.trim()}
-              >
-                Show Alert
-              </button>
-            </form>
-          );
-        }
-      }
-
-      const App = () => {
-        return (
-          <React.Fragment>
-            <h2>News</h2>
-            <Add />
-            <News data={myNews} /> {/* added data property */}
-          </React.Fragment>
-        );
-      };
 
       class Article extends React.Component {
         state = {
@@ -181,12 +115,12 @@
           this.setState({ visible: true });
         };
         render() {
-          const { author, text, bigText } = this.props.data;
+          const { author, title, content } = this.props.data;
           const { visible } = this.state;
           return (
             <div className="article">
               <p className="news__author">{author}:</p>
-              <p className="news__text">{text}:</p>
+              <p className="news__text">{title}:</p>
               {/* if not visible, show link */
               !visible && (
                 <a
@@ -197,11 +131,20 @@
                   Read more
                 </a>
               )}
-              {visible && <p className="news__bigText">{bigText}:</p>}
+              {visible && <p className="news__content">{content}:</p>}
             </div>
           );
         }
       }
+
+      Article.propTypes = {
+        data: PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          author: PropTypes.string.isRequired,
+          title: PropTypes.string.isRequired,
+          content: PropTypes.string.isRequired
+        })
+      };
 
       class News extends React.Component {
         renderNews = () => {
@@ -236,19 +179,106 @@
         }
       }
 
-      // PropTypes validation
-
       News.propTypes = {
         data: PropTypes.array.isRequired
       };
 
-      Article.propTypes = {
-        data: PropTypes.shape({
-          author: PropTypes.string.isRequired,
-          text: PropTypes.string.isRequired,
-          bigText: PropTypes.string.isRequired
-        })
+      class Add extends React.Component {
+        state = {
+          author: "",
+          title: "",
+          content: "",
+          agree: false
+        };
+
+        onBtnClickHandler = e => {
+          e.preventDefault();
+          const { author, title, content } = this.state;
+          this.props.onAddNews({
+            id: +new Date(),
+            author,
+            title,
+            content
+          });
+        };
+
+        handleChangeInputs = e => {
+          const { id, value } = e.currentTarget;
+          this.setState({ [id]: e.currentTarget.value });
+        };
+
+        handleCheckboxChange = e => {
+          this.setState({ agree: e.currentTarget.checked });
+        };
+        render() {
+          const { author, title, content, agree } = this.state;
+
+          return (
+            <form className="add">
+              <input
+                id="author"
+                type="text"
+                onChange={this.handleChangeInputs}
+                className="add__author"
+                placeholder="Your Name"
+                value={author}
+              />
+              <textarea
+                id="title"
+                onChange={this.handleChangeInputs}
+                className="add__text"
+                placeholder="Enter Title"
+                value={title}
+              />
+              <textarea
+                id="content"
+                onChange={this.handleChangeInputs}
+                className="add__text"
+                placeholder="Enter Content"
+                value={content}
+              />
+              <label className="add__checkrule">
+                <input type="checkbox" onChange={this.handleCheckboxChange} />I
+                Agree With Rulezzz
+              </label>
+              <button
+                className="add__btn"
+                onClick={this.onBtnClickHandler}
+                disabled={!agree || !author.trim() || !content.trim()}
+              >
+                Show Alert
+              </button>
+            </form>
+          );
+        }
+      }
+
+      Add.propTypes = {
+        onAddNews: PropTypes.func.isRequired
       };
+
+      class App extends React.Component {
+        state = {
+          news: myNews
+        };
+
+        handleAddNews = data => {
+          //adding new news to begining
+          const nextNews = [data, ...this.state.news];
+          // update array of news
+          this.setState({ news: nextNews });
+        };
+
+        render() {
+          return (
+            <React.Fragment>
+              <h2>News</h2>
+              <Add onAddNews={this.handleAddNews} />
+              <News data={this.state.news} />
+            </React.Fragment>
+          );
+        }
+      }
 
       ReactDOM.render(<App />, document.getElementById("root"));
     </script>
