@@ -117,12 +117,9 @@
           alert(this.state.author + "\n" + this.state.content);
         };
 
-        handleAuthorChange = e => {
-          this.setState({ author: e.currentTarget.value });
-        };
-
-        handleContentChange = e => {
-          this.setState({ content: e.currentTarget.value });
+        handleChangeInputs = e => {
+          const { id, value } = e.currentTarget;
+          this.setState({ [id]: e.currentTarget.value });
         };
 
         handleCheckboxChange = e => {
@@ -134,14 +131,16 @@
           return (
             <form className="add">
               <input
+                id="author"
                 type="text"
-                onChange={this.handleAuthorChange}
+                onChange={this.handleChangeInputs}
                 className="add__author"
                 placeholder="Your Name"
                 value={author}
               />
               <textarea
-                onChange={this.handleContentChange}
+                id="content"
+                onChange={this.handleChangeInputs}
                 className="add__text"
                 placeholder="Enter Content"
                 value={content}
