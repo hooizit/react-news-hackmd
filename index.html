@@ -11,10 +11,6 @@
     <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 
     <style>
-      .red {
-        color: #ff0000;
-      }
-
       body {
         background: rgba(0, 102, 255, 0.38);
         font-family: sans-serif;
@@ -43,8 +39,35 @@
         display: block;
       }
 
-      .test-input {
+      .add {
         margin: 0 5px 5px 0;
+        width: 210px;
+        border: 1px dashed rgba(0, 89, 181, 0.82);
+        padding: 5px;
+      }
+      .add__author,
+      .add__text,
+      .add__btn,
+      .add__checkrule {
+        display: block;
+        margin: 0 0 5px 0;
+        padding: 5px;
+        width: 94%;
+        border: 1px solid rgba(0, 89, 181, 0.82);
+      }
+      .add__checkrule {
+        border: none;
+        font-size: 12px;
+      }
+      .add__btn {
+        box-sizing: content-box;
+        color: #fff;
+        text-transform: uppercase;
+        background: #007ddc;
+      }
+      .add__btn:disabled {
+        background: #ccc;
+        color: #999;
       }
     </style>
   </head>
@@ -82,38 +105,59 @@
         }
       ];
 
-      class TestInput extends React.Component {
-        constructor(props) {
-          super(props);
-          this.input = React.createRef();
-        }
-        // Lifecycle methods
-        componentDidMount() {
-          this.input.current.focus();
-        }
-        /*
-          componentWillMount [DEPRECATED]
-          componentDidMount
-          componentWillReciveProps [DEPRECATED] Use getDerivedStateFromProps
-          shouldComponentUpdate
-          componentWillUpdate [DEPRECATED]
-          componentDidUpdate
-          componentWillUnmount
-        */
-        onButtonInputHandler = e => {
-          alert(this.input.current.value);
+      class Add extends React.Component {
+        state = {
+          author: "",
+          content: "",
+          agree: false
+        };
+
+        onBtnClickHandler = e => {
+          e.preventDefault();
+          alert(this.state.author + "\n" + this.state.content);
+        };
+
+        handleAuthorChange = e => {
+          this.setState({ author: e.currentTarget.value });
+        };
+
+        handleContentChange = e => {
+          this.setState({ content: e.currentTarget.value });
+        };
+
+        handleCheckboxChange = e => {
+          this.setState({ agree: e.currentTarget.checked });
         };
         render() {
+          const { author, content, agree } = this.state;
+
           return (
-            <React.Fragment>
+            <form className="add">
               <input
-                className="test-input"
-                defaultValue=""
-                placeholder="Enter value"
-                ref={this.input}
+                type="text"
+                onChange={this.handleAuthorChange}
+                className="add__author"
+                placeholder="Your Name"
+                value={author}
               />
-              <button onClick={this.onButtonInputHandler}>Send</button>
-            </React.Fragment>
+              <textarea
+                onChange={this.handleContentChange}
+                className="add__text"
+                placeholder="Enter Content"
+                value={content}
+              />
+              <label className="add__checkrule">
+                <input type="checkbox" onChange={this.handleCheckboxChange} />I
+                Agree With Rulezzz
+              </label>
+              <button
+                className="add__btn"
+                onClick={this.onBtnClickHandler}
+                disabled={!agree || !author.trim() || !content.trim()}
+              >
+                Show Alert
+              </button>
+            </form>
           );
         }
       }
@@ -122,7 +166,7 @@
         return (
           <React.Fragment>
             <h2>News</h2>
-            <TestInput />
+            <Add />
             <News data={myNews} /> {/* added data property */}
           </React.Fragment>
         );
