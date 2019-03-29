@@ -1,26 +1,28 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Add } from "./components/Add";
+import { News } from "./components/News";
+import NewsData from "./data/myNewsData";
+import "./App.css";
 
-class App extends Component {
+class App extends React.Component {
+  state = {
+    news: NewsData
+  };
+
+  handleAddNews = data => {
+    //adding new news to begining
+    const nextNews = [data, ...this.state.news];
+    // update array of news
+    this.setState({ news: nextNews });
+  };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <React.Fragment>
+        <h2>News</h2>
+        <Add onAddNews={this.handleAddNews} />
+        <News data={this.state.news} />
+      </React.Fragment>
     );
   }
 }
