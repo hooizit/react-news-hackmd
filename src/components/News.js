@@ -3,46 +3,31 @@ import PropTypes from "prop-types";
 import { Article } from "./Article";
 
 class News extends React.Component {
-  state = {
-    filteredNews: this.props.data
-  };
-
-  static getDerivedStateFromProps(props, state) {
-    let nextFilteredNews = [...props.data];
-
-    nextFilteredNews.forEach((item, index) => {
-      if (item.content.toLowerCase().indexOf("pubg") !== -1) {
-        item.content = "SPAM";
-      }
-    });
-
-    return { filteredNews: nextFilteredNews };
-  }
-
   renderNews = () => {
-    const { filteredNews } = this.state; // use state
+    // access to "this" methodName = () => {...}
+    const { data } = this.props;
     let newsTemplate = null;
 
-    if (filteredNews.length) {
-      newsTemplate = filteredNews.map(el => {
+    if (data.length) {
+      newsTemplate = data.map(el => {
         return <Article key={el.id} data={el} />;
       });
     } else {
-      newsTemplate = <p>Unfortunately, no news</p>;
+      newsTemplate = <p>Unfortunately no news</p>;
     }
 
     return newsTemplate;
   };
 
   render() {
-    const { filteredNews } = this.state;
+    const { data } = this.props;
 
     return (
       <div className="news">
         {this.renderNews()}
-        {filteredNews.length ? (
+        {data.length ? (
           <strong className={"news__count"}>
-            Total news: {filteredNews.length}
+            Total news count: {data.length}
           </strong>
         ) : null}
       </div>

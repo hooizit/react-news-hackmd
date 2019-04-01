@@ -9,6 +9,22 @@ class App extends React.Component {
     isLoading: false
   };
 
+  static getDerivedStateFromProps(props, state) {
+    let nextFilteredNews;
+    if (Array.isArray(state.news)) {
+      nextFilteredNews = [...state.news];
+
+      nextFilteredNews.forEach((item, index) => {
+        if (item.content.toLowerCase().indexOf("pubg") !== -1) {
+          item.content = "SPAM";
+        }
+      });
+
+      return { filteredNews: nextFilteredNews };
+    }
+    return null;
+  }
+
   handleAddNews = data => {
     //adding new news to begining
     const nextNews = [data, ...this.state.news];
