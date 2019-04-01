@@ -64,7 +64,7 @@ class Add extends React.Component {
           onClick={this.onBtnClickHandler}
           disabled={!agree || !author.trim() || !content.trim()}
         >
-          Show Alert
+          Add News
         </button>
       </form>
     );
